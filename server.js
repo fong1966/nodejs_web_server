@@ -1,6 +1,6 @@
 const http = require('http');
 const path = require('path');
-const fs = require('fs');
+const {fs,existsSync} = require('fs');
 const fsPromises = require('fs').promises;
 
 const logEvents = require('./logEvents');
@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 3500;
 
 const serveFile = async (filePath, contentType, response) => {
     try {
+        //console.log(`===>${filePath}`)
         const rawData = await fsPromises.readFile(
             filePath,
             !contentType.includes('image') ? 'utf8' : ''
@@ -39,6 +40,7 @@ const server = http.createServer((req, res) => {
     myEmitter.emit('log', `${req.url}\t${req.method}`, 'reqLog.txt');
 
     const extension = path.extname(req.url);
+    console.log(`ext: ${extension}`);
 
     let contentType;
 
@@ -68,23 +70,29 @@ const server = http.createServer((req, res) => {
     let filePath =
         contentType === 'text/html' && req.url === '/'
             ? path.join(__dirname, 'views', 'index.html')
-            : contentType === 'text/html' && req.url.slice(-1) === '/'
+            : contentType === 'text/html' && req.url.slice(-1) === '/'  //last char
                 ? path.join(__dirname, 'views', req.url, 'index.html')
                 : contentType === 'text/html'
                     ? path.join(__dirname, 'views', req.url)
-                    : path.join(__dirname, req.url);
+                    :contentType=== 'text/css'
+                    ? path.join(__dirname, req.url.slice(-13))
+                    : path.join(__dirname,req.url)
 
+    console.log(path.join(__dirname, 'views', req.url));                
     // makes .html extension not required in the browser
     if (!extension && req.url.slice(-1) !== '/') filePath += '.html';
 
-    const fileExists = fs.existsSync(filePath);
-
+    const fileExists = existsSync(filePath);
+    console.log(`1 ${filePath}`);
+    //console.log('first')
+    console.log(path.parse(filePath).base);
+    console.log(path.join(__dirname, 'views', '404.html'));
     if (fileExists) {
         serveFile(filePath, contentType, res);
     } else {
         switch (path.parse(filePath).base) {
             case 'old-page.html':
-                res.writeHead(301, { 'Location': '/new-page.html' });
+                res.writeHead(301, { 'Location': '../data/new-page.html' });
                 res.end();
                 break;
             case 'www-page.html':
@@ -92,6 +100,7 @@ const server = http.createServer((req, res) => {
                 res.end();
                 break;
             default:
+                console.log(__dirname);
                 serveFile(path.join(__dirname, 'views', '404.html'), 'text/html', res);
         }
     }

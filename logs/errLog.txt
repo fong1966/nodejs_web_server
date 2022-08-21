@@ -1,0 +1,6 @@
+20220821	19:46:07	8d14c0fd-fbb8-4e30-9f16-d7b67e733616	Error: EISDIR: illegal operation on a directory, read
+20220821	19:46:08	900d7f59-3fa7-4cff-a059-5960cafffc4a	Error: EISDIR: illegal operation on a directory, read
+20220821	19:46:19	4f309654-2c48-4324-afce-e83df38f8a46	Error: EISDIR: illegal operation on a directory, read
+20220821	19:46:20	996bd7c4-060f-4354-b19a-1498d617c47b	Error: EISDIR: illegal operation on a directory, read
+20220821	19:47:57	333553f4-a317-48c0-a4b4-a3c79953d4ef	Error: EISDIR: illegal operation on a directory, read
+20220821	19:48:10	74d2c300-d915-433c-9a15-2352f1208ccd	Error: EISDIR: illegal operation on a directory, read
